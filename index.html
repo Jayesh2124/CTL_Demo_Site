@@ -187,26 +187,30 @@
             <div class="row g-3">
               <div class="col-md-6">
                 <label class="form-label">Vendor Name *</label>
-                <input type="text" class="form-control" id="vendorName" />
+                <input type="text" class="form-control" id="vendorName" placeholder="Name"/>
                 <div class="error" id="errVendorName"></div>
               </div>
               <div class="col-md-6">
                 <label class="form-label">Phone *</label>
-                <input type="tel" class="form-control" id="vendorPhone" />
+                <input type="tel" class="form-control" id="vendorPhone" placeholder="Phone Number"/>
                 <div class="error" id="errVendorPhone"></div>
               </div>
               <div class="col-md-6">
                 <label class="form-label">Email *</label>
-                <input type="email" class="form-control" id="vendorEmail" />
+                <input type="email" class="form-control" id="vendorEmail" placeholder="e.g something@domain.com"/>
                 <div class="error" id="errVendorEmail"></div>
               </div>
               <div class="col-md-6">
                 <label class="form-label">Contact Title</label>
-                <input type="text" class="form-control" id="vendorContactTitle" />
+                <input type="text" class="form-control" id="vendorContactTitle" placeholder="Contact title" />
               </div>
               <div class="col-md-6">
                 <label class="form-label">Primary Contact</label>
-                <input type="text" class="form-control" id="vendorPrimaryContact" />
+                <input type="text" class="form-control" id="vendorPrimaryContact" placeholder="Contact Number"/>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Remittance Email Address</label>
+                <input type="text" class="form-control" id="vendorRemittance" placeholder="Remittance Email"/>
               </div>
             </div>
           </div>
@@ -216,31 +220,31 @@
             <div class="row g-3">
               <div class="col-md-6">
                 <label class="form-label">Address Line 1 *</label>
-                <input type="text" class="form-control" id="vendorAddress1" />
+                <input type="text" class="form-control" id="vendorAddress1" placeholder="Street, Locality"/>
                 <div class="error" id="errVendorAddress1"></div>
               </div>
               <div class="col-md-6">
                 <label class="form-label">Address Line 2</label>
-                <input type="text" class="form-control" id="vendorAddress2" />
+                <input type="text" class="form-control" id="vendorAddress2" placeholder="e.g. County"/>
               </div>
               <div class="col-md-6">
                 <label class="form-label">City *</label>
-                <input type="text" class="form-control" id="vendorCity" />
+                <input type="text" class="form-control" id="vendorCity" placeholder="City"/>
                 <div class="error" id="errVendorCity"></div>
               </div>
               <div class="col-md-6">
                 <label class="form-label">State *</label>
-                <input type="text" class="form-control" id="vendorState" />
+                <input type="text" class="form-control" id="vendorState" placeholder="State"/>
                 <div class="error" id="errVendorState"></div>
               </div>
               <div class="col-md-6">
                 <label class="form-label">Zip Code *</label>
-                <input type="text" class="form-control" id="vendorZip" />
+                <input type="text" class="form-control" id="vendorZip" placeholder="Zip Code"/>
                 <div class="error" id="errVendorZip"></div>
               </div>
               <div class="col-md-6">
                 <label class="form-label">Country *</label>
-                <input type="text" class="form-control" id="vendorCountry" />
+                <input type="text" class="form-control" id="vendorCountry" placeholder="Country"/>
                 <div class="error" id="errVendorCountry"></div>
               </div>
             </div>
@@ -278,42 +282,48 @@
             <!-- Address Line 1 -->
             <div class="col-md-6">
               <label class="form-label">Address Line 1 *</label>
-              <input type="text" class="form-control" id="warehouseAddress1" />
+              <input type="text" class="form-control" id="warehouseAddress1" placeholder="Street, Locality"/>
               <div class="error" id="errWarehouseAddress1"></div>
             </div>
 
             <!-- Address Line 2 (full width) -->
             <div class="col-md-12">
               <label class="form-label">Address Line 2</label>
-              <input type="text" class="form-control" id="warehouseAddress2" />
+              <input type="text" class="form-control" id="warehouseAddress2" placeholder="County"/>
             </div>
 
             <!-- City -->
             <div class="col-md-6">
               <label class="form-label">City *</label>
-              <input type="text" class="form-control" id="warehouseCity" />
+              <input type="text" class="form-control" id="warehouseCity" placeholder="City"/>
               <div class="error" id="errWarehouseCity"></div>
             </div>
 
             <!-- State -->
             <div class="col-md-6">
               <label class="form-label">State *</label>
-              <input type="text" class="form-control" id="warehouseState" />
+              <input type="text" class="form-control" id="warehouseState" placeholder="State"/>
               <div class="error" id="errWarehouseState"></div>
             </div>
 
             <!-- Zip Code -->
             <div class="col-md-6">
               <label class="form-label">Zip Code *</label>
-              <input type="text" class="form-control" id="warehouseZip" />
+              <input type="text" class="form-control" id="warehouseZip" placeholder="Zip Code"/>
               <div class="error" id="errWarehouseZip"></div>
             </div>
 
             <!-- Country -->
             <div class="col-md-6">
               <label class="form-label">Country *</label>
-              <input type="text" class="form-control" id="warehouseCountry" />
+              <input type="text" class="form-control" id="warehouseCountry" placeholder="Country"/>
               <div class="error" id="errWarehouseCountry"></div>
+            </div>
+            <!-- Country -->
+            <div class="col-md-12">
+              <label class="form-label">Description </label>
+              <textarea type="text" class="form-control" id="warehouseDescription" placeholder="Warehouse Description"></textarea>
+              <div class="error" id="errwarehouseDescription"></div>
             </div>
           </div>
         </form>
