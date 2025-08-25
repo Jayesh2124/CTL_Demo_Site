@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vendor & Warehouse Management</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    :root {
+      --card-radius: 14px;
+    }
+    body { background: #f5f7fb; }
+    .sidebar { height: 100vh; background: #111827; color: #fff; position: sticky; top: 0; }
+    .sidebar .nav-link { color: #9ca3af; border-radius: 10px; padding: 10px 12px; }
+    .sidebar .nav-link.active, .sidebar .nav-link:hover { background: #1f2937; color: #fff; }
+    .card { border: 0; border-radius: var(--card-radius); box-shadow: 0 8px 24px rgba(16,24,40,0.06); }
+    .table > :not(caption) > * > * { vertical-align: middle; }
+    .error { color: #dc3545; font-size: 0.85rem; margin-top: 4px; }
+    .toolbar { gap: .5rem; }
+    .search-input { min-width: 220px; }
+    /* Toasts */
+    #toastStack { position: fixed; top: 1rem; right: 1rem; z-index: 1080; display: flex; flex-direction: column; gap: .5rem; }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row g-0">
+      <!-- Sidebar -->
+      <div class="col-12 col-md-2 col-lg-2 sidebar p-3">
+        <div class="d-flex align-items-center mb-4">
+          <i class="bi bi-box-seam fs-3 me-2"></i>
+          <h5 class="mb-0">CTL Admin</h5>
+        </div>
+        <nav class="nav flex-column">
+          <a class="nav-link active" href="#" onclick="showSection('vendor', this)"><i class="bi bi-people me-2"></i>Vendor</a>
+          <a class="nav-link" href="#" onclick="showSection('warehouse', this)"><i class="bi bi-buildings me-2"></i>Warehouse</a>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-12 col-md-10 col-lg-10 p-4">
+        <!-- VENDOR -->
+        <section id="vendorSection">
+          <div class="card p-3 mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                 <div class="input-group search-input">
+                  <span class="input-group-text"><i class="bi bi-search"></i></span>
+                  <input type="text" id="vendorSearch" class="form-control" placeholder="Search vendors..." oninput="filterTable('vendorTable','vendorSearch')" />
+                </div>
+              </div>
+              <div class="d-flex toolbar">
+                <button class="btn btn-primary" onclick="openVendorModal()"><i class="bi bi-plus-lg me-1"></i>Add Vendor</button>
+              </div>
+            </div>
+            <div class="table-responsive mt-3">
+              <table class="table table-hover align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="vendorTable">
+                  <tr>
+                    <td>TechWave Solutions</td>
+                    <td>+1-212-555-0174</td>
+                    <td>contact@techwave.com</td>
+                    <td>New York</td>
+                    <td>USA</td>
+                    <td class="text-end">
+                      <button class="btn btn-sm btn-outline-secondary me-2" onclick="editVendor(this)"><i class="bi bi-pencil"></i></button>
+                      <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(this, 'vendor')"><i class="bi bi-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>GreenLeaf Supplies</td>
+                    <td>+1-469-555-0198</td>
+                    <td>sales@greenleaf.com</td>
+                    <td>Dallas</td>
+                    <td>USA</td>
+                    <td class="text-end">
+                      <button class="btn btn-sm btn-outline-secondary me-2" onclick="editVendor(this)"><i class="bi bi-pencil"></i></button>
+                      <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(this, 'vendor')"><i class="bi bi-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- WAREHOUSE -->
+        <section id="warehouseSection" style="display:none;">
+          <div class="card p-3 mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+               <div class="input-group search-input">
+                  <span class="input-group-text"><i class="bi bi-search"></i></span>
+                  <input type="text" id="warehouseSearch" class="form-control" placeholder="Search warehouses..." oninput="filterTable('warehouseTable','warehouseSearch')" />
+                </div>
+              </div>
+              <div class="d-flex toolbar">
+                
+                <button class="btn btn-primary" onclick="openWarehouseModal()"><i class="bi bi-plus-lg me-1"></i>Add Warehouse</button>
+              </div>
+            </div>
+            <div class="table-responsive mt-3">
+              <table class="table table-hover align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="warehouseTable">
+                  <tr>
+                    <td>Main Warehouse</td>
+                    <td>Chicago</td>
+                    <td>USA</td>
+                    <td class="text-end">
+                      <button class="btn btn-sm btn-outline-secondary me-2" onclick="editWarehouse(this)"><i class="bi bi-pencil"></i></button>
+                      <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(this, 'warehouse')"><i class="bi bi-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>East Distribution</td>
+                    <td>Boston</td>
+                    <td>USA</td>
+                    <td class="text-end">
+                      <button class="btn btn-sm btn-outline-secondary me-2" onclick="editWarehouse(this)"><i class="bi bi-pencil"></i></button>
+                      <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(this, 'warehouse')"><i class="bi bi-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Stack -->
+  <div id="toastStack" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Delete</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete this record?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vendor Modal (2-step form) -->
+<div class="modal fade" id="vendorModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Vendor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="vendorForm" novalidate>
+          <!-- Step 1: Info -->
+          <div id="vendorStep1">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Vendor Name *</label>
+                <input type="text" class="form-control" id="vendorName" />
+                <div class="error" id="errVendorName"></div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Phone *</label>
+                <input type="tel" class="form-control" id="vendorPhone" />
+                <div class="error" id="errVendorPhone"></div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Email *</label>
+                <input type="email" class="form-control" id="vendorEmail" />
+                <div class="error" id="errVendorEmail"></div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Contact Title</label>
+                <input type="text" class="form-control" id="vendorContactTitle" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Primary Contact</label>
+                <input type="text" class="form-control" id="vendorPrimaryContact" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Address -->
+          <div id="vendorStep2" style="display:none;">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Address Line 1 *</label>
+                <input type="text" class="form-control" id="vendorAddress1" />
+                <div class="error" id="errVendorAddress1"></div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Address Line 2</label>
+                <input type="text" class="form-control" id="vendorAddress2" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">City *</label>
+                <input type="text" class="form-control" id="vendorCity" />
+                <div class="error" id="errVendorCity"></div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">State *</label>
+                <input type="text" class="form-control" id="vendorState" />
+                <div class="error" id="errVendorState"></div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Zip Code *</label>
+                <input type="text" class="form-control" id="vendorZip" />
+                <div class="error" id="errVendorZip"></div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Country *</label>
+                <input type="text" class="form-control" id="vendorCountry" />
+                <div class="error" id="errVendorCountry"></div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="vendorBackBtn" onclick="backVendorStep()" style="display:none;">Back</button>
+        <button type="button" class="btn btn-primary" id="vendorNextBtn" onclick="nextVendorStep()">Next</button>
+        <button type="button" class="btn btn-success" id="vendorSaveBtn" onclick="saveVendor()" style="display:none;">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Warehouse Modal (single step) -->
+<div class="modal fade" id="warehouseModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Warehouse</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="warehouseForm" novalidate>
+          <div class="row g-3">
+            <!-- Warehouse Name -->
+            <div class="col-md-6">
+              <label class="form-label">Warehouse Name *</label>
+              <input type="text" class="form-control" id="warehouseName" />
+              <div class="error" id="errWarehouseName"></div>
+            </div>
+
+            <!-- Address Line 1 -->
+            <div class="col-md-6">
+              <label class="form-label">Address Line 1 *</label>
+              <input type="text" class="form-control" id="warehouseAddress1" />
+              <div class="error" id="errWarehouseAddress1"></div>
+            </div>
+
+            <!-- Address Line 2 (full width) -->
+            <div class="col-md-12">
+              <label class="form-label">Address Line 2</label>
+              <input type="text" class="form-control" id="warehouseAddress2" />
+            </div>
+
+            <!-- City -->
+            <div class="col-md-6">
+              <label class="form-label">City *</label>
+              <input type="text" class="form-control" id="warehouseCity" />
+              <div class="error" id="errWarehouseCity"></div>
+            </div>
+
+            <!-- State -->
+            <div class="col-md-6">
+              <label class="form-label">State *</label>
+              <input type="text" class="form-control" id="warehouseState" />
+              <div class="error" id="errWarehouseState"></div>
+            </div>
+
+            <!-- Zip Code -->
+            <div class="col-md-6">
+              <label class="form-label">Zip Code *</label>
+              <input type="text" class="form-control" id="warehouseZip" />
+              <div class="error" id="errWarehouseZip"></div>
+            </div>
+
+            <!-- Country -->
+            <div class="col-md-6">
+              <label class="form-label">Country *</label>
+              <input type="text" class="form-control" id="warehouseCountry" />
+              <div class="error" id="errWarehouseCountry"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick="saveWarehouse()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // --- Helpers ---
+    const qs = (s, r=document) => r.querySelector(s);
+    const qsa = (s, r=document) => Array.from(r.querySelectorAll(s));
+
+    let editingRow = null;
+    let editingType = null; // 'vendor' | 'warehouse'
+    let rowToDelete = null;
+
+    function showSection(section, anchor){
+      qs('#vendorSection').style.display = section==='vendor' ? 'block' : 'none';
+      qs('#warehouseSection').style.display = section==='warehouse' ? 'block' : 'none';
+      qsa('.sidebar .nav-link').forEach(a=>a.classList.remove('active'));
+      if(anchor) anchor.classList.add('active');
+    }
+
+    function filterTable(tableId, inputId){
+      const term = qs('#'+inputId).value.trim().toLowerCase();
+      qsa('#'+tableId+' tr').forEach(tr => {
+        const text = tr.innerText.toLowerCase();
+        tr.style.display = text.includes(term) ? '' : 'none';
+      });
+    }
+
+    // --- Toasts ---
+    function showToast(title, message, variant='primary'){
+      const id = 't'+Math.random().toString(36).slice(2);
+      const icon = variant==='success' ? 'check-circle' : variant==='danger' ? 'x-circle' : variant==='warning' ? 'exclamation-triangle' : 'info-circle';
+      const toast = document.createElement('div');
+      toast.className = 'toast align-items-center border-0';
+      toast.id = id;
+      toast.role = 'alert';
+      toast.ariaLive = 'assertive';
+      toast.ariaAtomic = 'true';
+      toast.innerHTML = `
+        <div class="toast-header bg-${variant} text-white">
+          <i class="bi bi-${icon} me-2"></i>
+          <strong class="me-auto">${title}</strong>
+          <small>now</small>
+          <button type="button" class="btn-close btn-close-white ms-2 mb-1" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">${message}</div>`;
+      qs('#toastStack').appendChild(toast);
+      const t = new bootstrap.Toast(toast, { delay: 2500 });
+      t.show();
+      toast.addEventListener('hidden.bs.toast', ()=> toast.remove());
+    }
+
+    // --- Delete Confirmation ---
+    function confirmDelete(btn, type){
+      rowToDelete = btn.closest('tr');
+      const modal = new bootstrap.Modal(qs('#deleteModal'));
+      qs('#confirmDeleteBtn').onclick = () => {
+        rowToDelete.remove();
+        modal.hide();
+        showToast('Deleted', `${type==='vendor'?'Vendor':'Warehouse'} deleted successfully`, 'warning');
+      };
+      modal.show();
+    }
+
+    // --- Vendor Modal Logic (2-step) ---
+    function openVendorModal(){
+      editingRow = null; editingType = 'vendor';
+      qs('#vendorForm').reset();
+      clearVendorErrors();
+      showVendorStep(1);
+      new bootstrap.Modal(qs('#vendorModal')).show();
+    }
+
+    function editVendor(btn){
+      editingRow = btn.closest('tr'); editingType = 'vendor';
+      qs('#vendorForm').reset();
+      clearVendorErrors();
+      // populate step 1 basics
+      qs('#vendorName').value = editingRow.cells[0].innerText;
+      qs('#vendorPhone').value = editingRow.cells[1].innerText;
+      qs('#vendorEmail').value = editingRow.cells[2].innerText;
+      // step 2 minimal fields from grid (others left as-is)
+      qs('#vendorCity').value = editingRow.cells[3].innerText;
+      qs('#vendorCountry').value = editingRow.cells[4].innerText;
+      showVendorStep(1);
+      new bootstrap.Modal(qs('#vendorModal')).show();
+    }
+
+    function showVendorStep(n){
+      if(n===1){
+        qs('#vendorStep1').style.display='block';
+        qs('#vendorStep2').style.display='none';
+        qs('#vendorBackBtn').style.display='none';
+        qs('#vendorNextBtn').style.display='inline-block';
+        qs('#vendorSaveBtn').style.display='none';
+      } else {
+        qs('#vendorStep1').style.display='none';
+        qs('#vendorStep2').style.display='block';
+        qs('#vendorBackBtn').style.display='inline-block';
+        qs('#vendorNextBtn').style.display='none';
+        qs('#vendorSaveBtn').style.display='inline-block';
+      }
+    }
+
+    function clearVendorErrors(){
+      ['VendorName','VendorPhone','VendorEmail','VendorAddress1','VendorCity','VendorState','VendorZip','VendorCountry']
+      .forEach(k=> qs('#err'+k).innerText='');
+    }
+
+    function nextVendorStep(){
+      clearVendorErrors();
+      let ok = true;
+      if(!qs('#vendorName').value.trim()){ qs('#errVendorName').innerText='Name is required'; ok=false; }
+      if(!qs('#vendorPhone').value.trim()){ qs('#errVendorPhone').innerText='Phone is required'; ok=false; }
+      const email = qs('#vendorEmail').value.trim();
+      if(!email){ qs('#errVendorEmail').innerText='Email is required'; ok=false; }
+      else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ qs('#errVendorEmail').innerText='Enter a valid email'; ok=false; }
+      if(ok) showVendorStep(2);
+    }
+
+    function backVendorStep(){ showVendorStep(1); }
+
+    function saveVendor(){
+      clearVendorErrors();
+      let ok = true;
+      if(!qs('#vendorAddress1').value.trim()){ qs('#errVendorAddress1').innerText='Address Line 1 is required'; ok=false; }
+      if(!qs('#vendorCity').value.trim()){ qs('#errVendorCity').innerText='City is required'; ok=false; }
+      if(!qs('#vendorState').value.trim()){ qs('#errVendorState').innerText='State is required'; ok=false; }
+      if(!qs('#vendorZip').value.trim()){ qs('#errVendorZip').innerText='Zip Code is required'; ok=false; }
+      if(!qs('#vendorCountry').value.trim()){ qs('#errVendorCountry').innerText='Country is required'; ok=false; }
+      if(!ok) return;
+
+      const name = qs('#vendorName').value.trim();
+      const phone = qs('#vendorPhone').value.trim();
+      const email = qs('#vendorEmail').value.trim();
+      const city = qs('#vendorCity').value.trim();
+      const country = qs('#vendorCountry').value.trim();
+
+      if(editingRow){
+        editingRow.cells[0].innerText = name;
+        editingRow.cells[1].innerText = phone;
+        editingRow.cells[2].innerText = email;
+        editingRow.cells[3].innerText = city;
+        editingRow.cells[4].innerText = country;
+        showToast('Updated', 'Vendor updated successfully', 'success');
+      } else {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${name}</td>
+          <td>${phone}</td>
+          <td>${email}</td>
+          <td>${city}</td>
+          <td>${country}</td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-secondary me-2" onclick="editVendor(this)"><i class=\"bi bi-pencil\"></i></button>
+            <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(this, 'vendor')"><i class=\"bi bi-trash\"></i></button>
+          </td>`;
+        qs('#vendorTable').appendChild(row);
+        showToast('Saved', 'Vendor added successfully', 'success');
+      }
+
+      bootstrap.Modal.getInstance(qs('#vendorModal')).hide();
+    }
+
+    // --- Warehouse Modal Logic ---
+    function openWarehouseModal(){
+      editingRow = null; editingType = 'warehouse';
+      qs('#warehouseForm').reset();
+      clearWarehouseErrors();
+      new bootstrap.Modal(qs('#warehouseModal')).show();
+    }
+
+    function editWarehouse(btn){
+      editingRow = btn.closest('tr'); editingType = 'warehouse';
+      qs('#warehouseForm').reset();
+      clearWarehouseErrors();
+      qs('#warehouseName').value = editingRow.cells[0].innerText;
+      qs('#warehouseCity').value = editingRow.cells[1].innerText;
+      qs('#warehouseCountry').value = editingRow.cells[2].innerText;
+      new bootstrap.Modal(qs('#warehouseModal')).show();
+    }
+
+    function clearWarehouseErrors(){
+      ['WarehouseName','WarehouseAddress1','WarehouseCity','WarehouseState','WarehouseZip','WarehouseCountry']
+      .forEach(k=> qs('#err'+k).innerText='');
+    }
+
+    function saveWarehouse(){
+      clearWarehouseErrors();
+      let ok = true;
+      if(!qs('#warehouseName').value.trim()){ qs('#errWarehouseName').innerText='Name is required'; ok=false; }
+      if(!qs('#warehouseAddress1').value.trim()){ qs('#errWarehouseAddress1').innerText='Address Line 1 is required'; ok=false; }
+      if(!qs('#warehouseCity').value.trim()){ qs('#errWarehouseCity').innerText='City is required'; ok=false; }
+      if(!qs('#warehouseState').value.trim()){ qs('#errWarehouseState').innerText='State is required'; ok=false; }
+      if(!qs('#warehouseZip').value.trim()){ qs('#errWarehouseZip').innerText='Zip Code is required'; ok=false; }
+      if(!qs('#warehouseCountry').value.trim()){ qs('#errWarehouseCountry').innerText='Country is required'; ok=false; }
+      if(!ok) return;
+
+      const name = qs('#warehouseName').value.trim();
+      const city = qs('#warehouseCity').value.trim();
+      const country = qs('#warehouseCountry').value.trim();
+
+      if(editingRow){
+        editingRow.cells[0].innerText = name;
+        editingRow.cells[1].innerText = city;
+        editingRow.cells[2].innerText = country;
+        showToast('Updated', 'Warehouse updated successfully', 'success');
+      } else {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${name}</td>
+          <td>${city}</td>
+          <td>${country}</td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-secondary me-2" onclick="editWarehouse(this)"><i class=\"bi bi-pencil\"></i></button>
+            <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(this, 'warehouse')"><i class=\"bi bi-trash\"></i></button>
+          </td>`;
+        qs('#warehouseTable').appendChild(row);
+        showToast('Saved', 'Warehouse added successfully', 'success');
+      }
+
+      bootstrap.Modal.getInstance(qs('#warehouseModal')).hide();
+    }
+  </script>
+</body>
+</html>
